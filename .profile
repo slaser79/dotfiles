@@ -18,6 +18,6 @@ fi
 
 # set PATH so it includes user's private bin directories
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-if [ -e /home/smureriwa/.nix-profile/etc/profile.d/nix.sh ]; then . /home/smureriwa/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-alias config='/usr/bin/git --git-dir=/home/smureriwa/.cfg/ --work-tree=/home/smureriwa'
+#eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
