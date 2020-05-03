@@ -20,4 +20,8 @@ fi
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 #eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+if [ -e $HOME/.cfg/ ]; then 
+	alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+else
+	alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+fi
