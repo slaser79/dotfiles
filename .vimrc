@@ -1,6 +1,7 @@
 set relativenumber
 set hlsearch
 set cursorline
+set cursorcolumn
 set nowrap
 set et
 
