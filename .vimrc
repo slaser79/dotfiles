@@ -148,4 +148,3 @@ nnoremap <leader>r  :call SendCommandToTerminal (":r")<cr><esc>
 
 
 
->>>>>>> f142bc83d2d18c90763942df6f70d2095b7cf13c
