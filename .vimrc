@@ -5,12 +5,8 @@ set cursorcolumn
 set nowrap
 set et
 
-set relativenumber
-set hlsearch
-set cursorline
-set nowrap
-set et
-syntax on 
+
+syntax on
 filetype plugin indent on
 
 "Keyboard shortcuts
@@ -18,24 +14,26 @@ inoremap jk <ESC>
 inoremap <c-s> <Esc>:update<CR>
 noremap <c-s> :update<CR>
 
-call plug#begin('~/.vim/plugged')
+if !has('nvim')
+	call plug#begin('~/.vim/plugged')
 
-Plug 'LnL7/vim-nix'
-Plug 'hzchirs/vim-material'
-Plug 'dkasak/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tpope/vim-surround'
-Plug 'neovimhaskell/haskell-vim' 
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'habamax/vim-sendtoterm'
+	Plug 'LnL7/vim-nix'
+	Plug 'hzchirs/vim-material'
+	Plug 'dkasak/gruvbox'
+	Plug 'vim-airline/vim-airline'
+	Plug 'vim-airline/vim-airline-themes'
+	Plug 'ctrlpvim/ctrlp.vim'
+	Plug 'tpope/vim-surround'
+	Plug 'neovimhaskell/haskell-vim'
+	Plug 'drewtempelmeyer/palenight.vim'
+	Plug 'habamax/vim-sendtoterm'
 
-call plug#end()
+	call plug#end()
+endif
 
 set background=dark
 "hi CursorLine   cterm=NONE ctermbg=lightred ctermfg=white guibg=lightred guifg=white
-"hi CursorLine   cterm=NONE ctermbg=darkblue guibg=darkblue 
+"hi CursorLine   cterm=NONE ctermbg=darkblue guibg=darkblue
 
 "required to make vim work in tmux
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -142,9 +140,165 @@ fu! SendCommandToTerminal(...)
 	let &clipboard = clipboard_save
 endfu
 
-nnoremap <leader>c  :call SendCommandToTerminal ("cabal build")<cr><esc>  
-nnoremap <leader>r  :call SendCommandToTerminal (":r")<cr><esc>  
+"sending to GHCI
+nnoremap <leader>c  :call SendCommandToTerminal ("cabal build")<cr><esc>
+nnoremap <leader>r  :call SendCommandToTerminal (":r")<cr><esc>
+
+"grepping for words under cursor
+
+nnoremap gr :grep -R <cword> *<CR>
+nnoremap Gr :grep -R <cword> %:p:h/*<CR>
+nnoremap gR :grep -R '\b<cword>\b' *<CR>
+nnoremap GR :grep -R '\b<cword>\b' %:p:h/*<CR>
 
 
+" Settings for COC
+if has('nvim')
+  set hidden
+  set nobackup
+  set nowritebackup
 
+  set cmdheight=2
+  set updatetime=300
+
+  set shortmess+=c
+
+  if has("patch-8.1.1564")
+    set signcolumn=number
+  else
+    set signcolumn=yes
+  endif
+
+  "use tab for trigger completion with characters ahead and navigat  e
+  inoremap <silent><expr> <TAB> 
+        \ pumvisible() ? "\<C-n>":
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ coc#refresh()
+
+  inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+
+  function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col  || getline('.')[col - 1] =~# '\s'
+  endfunction
+
+  "Use <c-space> to trigger completion
+  if has('nvim')
+    inoremap <silent><expr> <c-space> coc#refresh()
+  else
+    inoremap <silent><expr> <c-@> coc#refresh()
+  endif
+
+  inoremap <silent> <expr> <cr> pumvisible() ? coc#_select_confirm()
+        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+  nmap <silent> [g <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gy <Plug>(coc-type-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
+
+  " Use K to show documentation in preview window.
+  nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+  function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+      execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
+      call CocActionAsync('doHover')
+    else
+      execute '!' . &keywordprg . " " . expand('<cword>')
+    endif
+  endfunction
+
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+
+  " Symbol renaming.
+  nmap <leader>rn <Plug>(coc-rename)
+
+  " Formatting selected code.
+  xmap <leader>f  <Plug>(coc-format-selected)
+  nmap <leader>f  <Plug>(coc-format-selected)
+
+  augroup mygroup
+    autocmd!
+    "Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  augroup end
+
+  " Applying codeAction to the selected region.
+  " Example: `<leader>aap` for current paragraph
+  xmap <leader>a  <Plug>(coc-codeaction-selected)
+  nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+  " Remap keys for applying codeAction to the current buffer.
+  nmap <leader>ac  <Plug>(coc-codeaction)
+  "  Apply AutoFix to problem on the current line.
+  nmap <leader>qf  <Plug>(coc-fix-current)
+
+  " Map function and class text objects
+  " " NOTE: Requires 'textDocument.documentSymbol' support from the language
+  " server.
+  xmap if <Plug>(coc-funcobj-i)
+  omap if <Plug>(coc-funcobj-i)
+  xmap af <Plug>(coc-funcobj-a)
+  omap af <Plug>(coc-funcobj-a)
+  xmap ic <Plug>(coc-classobj-i)
+  omap ic <Plug>(coc-classobj-i)
+  xmap ac <Plug>(coc-classobj-a)
+  omap ac <Plug>(coc-classobj-a)
+
+  if has('vim-0.4.0') || has('patch-8.2.0750')
+    nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+    nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+    inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+    inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+    vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+    vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  endif
+
+  " Add `:Format` command to format current buffer.
+  command! -nargs=0 Format :call CocAction('format')
+  "
+  "  Add `:Fold` command to fold current buffer.
+  command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+  "
+  "  Add `:OR` command for organize imports of the current buffer.
+  command! -nargs=0 OR   :call     CocAction('runCommand',  'editor.action.organizeImport')
+  "
+
+  " Mappings for CoCList
+  "  Show all diagnostics.
+  nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+  " " Manage extensions.
+  nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+  " " Show commands.
+  nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+  " " Find symbol of current document.
+  nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+  " " Search workspace symbols.
+  nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+  " " Do default action for next item.
+  nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+  " " Do default action for previous item.
+  nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+  " " Resume latest coc list.
+  nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+
+endif
+
+
+"terminal mappings
+if has('nvim')
+        tnoremap <C-w>h <C-\><C-n><C-w>h
+        tnoremap <C-w>j <C-\><C-n><C-w>j
+        tnoremap <C-w>k <C-\><C-n><C-w>k
+        tnoremap <C-w>l <C-\><C-n><C-w>l
+endif
 

@@ -25,3 +25,6 @@ if [ -e $HOME/.cfg/ ]; then
 else
 	alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 fi
+export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+export EDITOR=vim
+set -o vi
