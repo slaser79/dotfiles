@@ -172,7 +172,7 @@ if has('nvim')
   endif
 
   "use tab for trigger completion with characters ahead and navigat  e
-  inoremap <silent><expr> <TAB> 
+  inoremap <silent><expr> <TAB>
         \ pumvisible() ? "\<C-n>":
         \ <SID>check_back_space() ? "\<TAB>" :
         \ coc#refresh()
@@ -233,6 +233,16 @@ if has('nvim')
     autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
   augroup end
 
+  "Mappings for pure coc
+  
+  " Fix autofix problem of current line
+  nmap <leader>ca  <Plug>(coc-codeaction)
+  vmap <leader>ca  <Plug>(coc-codeaction)
+  " Fix autofix problem of current line
+  nmap <leader>qf <Plug>(coc-fix-current)
+  nmap <leader>ql <Plug>(coc-codelens-action)
+  nmap <leader>re <Plug>(coc-rename)
+
   " Applying codeAction to the selected region.
   " Example: `<leader>aap` for current paragraph
   xmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -274,41 +284,35 @@ if has('nvim')
   command! -nargs=0 OR   :call     CocAction('runCommand',  'editor.action.organizeImport')
   "
 
-  " Mappings for CoCList
-  "  Show all diagnostics.
-  nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-  " " Manage extensions.
-  nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-  " " Show commands.
-  nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-  " " Find symbol of current document.
-  nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-  " " Search workspace symbols.
-  nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-  " " Do default action for next item.
-  nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-  " " Do default action for previous item.
-  nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-  " " Resume latest coc list.
-  nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
   "Add Coc-Fzf keyboard shortcuts
   " allow to scroll in the preview
-  set mouse=a
+  "set mouse=a
   "
-  " " mappings
-  nnoremap <silent> <space><space> :<C-u>CocFzfList<CR>
-  nnoremap <silent> <space>a       :<C-u>CocFzfList diagnostics<CR>
-  nnoremap <silent> <space>b       :<C-u>CocFzfList diagnostics --current-buf<CR>
-  nnoremap <silent> <space>c       :<C-u>CocFzfList commands<CR>
-  nnoremap <silent> <space>e       :<C-u>CocFzfList extensions<CR>
-  nnoremap <silent> <space>l       :<C-u>CocFzfList location<CR>
-  nnoremap <silent> <space>o       :<C-u>CocFzfList outline<CR>
-  nnoremap <silent> <space>s       :<C-u>CocFzfList symbols<CR>
-  nnoremap <silent> <space>p       :<C-u>CocFzfListResume<CR>
-  
+  " Original Coc mappings mappings
+  "nnoremap <silent> <space><space> :<C-u>CocFzfList<CR>
+  "nnoremap <silent> <space>a       :<C-u>CocFzfList diagnostics<CR>
+  "nnoremap <silent> <space>b       :<C-u>CocFzfList diagnostics --current-buf<CR>
+  "nnoremap <silent> <space>c       :<C-u>CocFzfList commands<CR>
+  "nnoremap <silent> <space>e       :<C-u>CocFzfList extensions<CR>
+  "nnoremap <silent> <space>l       :<C-u>CocFzfList location<CR>
+  "nnoremap <silent> <space>o       :<C-u>CocFzfList outline<CR>
+  "nnoremap <silent> <space>s       :<C-u>CocFzfList symbols<CR>
+  "nnoremap <silent> <space>p       :<C-u>CocFzfListResume<CR>
+
+  nnoremap <silent> <leader>aa  :CocFzfList actions<CR>
+  vnoremap <silent> <leader>aa  :CocFzfList actions<CR>
+  nnoremap <silent> <leader>ll  :CocFzfList<CR>
+  nnoremap <silent> <leader>cc  :<C-u>CocFzfList commands<CR>
+  nnoremap <silent> <leader>da  :CocFzfList diagnostics<CR>
+  nnoremap <silent> <leader>dc :<C-u>CocFzfList diagnostics --current-buf<CR>
+  nnoremap <silent> <leader>oo  :CocFzfList outline<CR>
+
+
+
+
    "replace <CtrlP> with FZF
-  nnoremap <C-p> :<C-u>FZF<CR> 
+  nnoremap <C-p> :<C-u>FZF<CR>
   "use rip grep  to search under keyboard
   noremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
 endif
