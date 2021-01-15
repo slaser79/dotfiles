@@ -53,7 +53,11 @@ endif
 
 
 "let g:gruvbox_italic=1
-colorscheme molokai
+if has('nvim')
+        colorscheme molokai
+else 
+        colorscheme gruvbox
+endif
 
 
 "settings for Haskell-vim
