@@ -27,4 +27,6 @@ else
 fi
 export XDG_DATA_DIRS="$HOME/.nix-profile/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 export EDITOR=vim
+export PAGER='vim -R -c "set syntax=dbout" -'
 set -o vi
+if [ -e /home/shingi79/.nix-profile/etc/profile.d/nix.sh ]; then . /home/shingi79/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
